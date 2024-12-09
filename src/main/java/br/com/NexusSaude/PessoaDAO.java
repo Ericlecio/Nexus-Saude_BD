@@ -1,4 +1,4 @@
-package br.com.AulaJPA;
+package br.com.NexusSaude;
 	
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -50,4 +50,3 @@ public class PessoaDAO {
         em.close();
     }
 }
-

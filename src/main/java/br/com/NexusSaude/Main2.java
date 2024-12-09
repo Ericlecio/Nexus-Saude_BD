@@ -1,4 +1,4 @@
-package br.com.AulaJPA;
+package br.com.NexusSaude;
 
 
 import java.util.ArrayList;
