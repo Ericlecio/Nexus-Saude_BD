@@ -1,51 +1,51 @@
-package br.com.NexusSaude;
+package br.com.NexusSaude.persistencia;
 
 import java.util.List;
 
+import br.com.NexusSaude.entidades.Medico;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
-public class UsuarioDAO {
+
+public class MedicoDAO {
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("crud-basic");
 
-    public void salvar(Usuario usuario) {
+    public void salvar(Medico medico) {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        em.persist(usuario);
+        em.persist(medico);
         em.getTransaction().commit();
         em.close();
     }
 
-    public Usuario buscarPorId(String string) {
+    public Medico buscarPorId(Long id) {
         EntityManager em = emf.createEntityManager();
-        Usuario usuario = em.find(Usuario.class, string);
+        Medico medico = em.find(Medico.class, id);
         em.close();
-        return usuario;
+        return medico;
     }
 
-    public Usuario buscarPorEmail(String email) {
+    public List<Medico> listar() {
         EntityManager em = emf.createEntityManager();
-        Usuario usuario = em.createQuery("SELECT u FROM Usuario u WHERE u.email = :email", Usuario.class)
-                .setParameter("email", email)
-                .getSingleResult();
+        List<Medico> medicos = em.createQuery("FROM Medico", Medico.class).getResultList();
         em.close();
-        return usuario;
+        return medicos;
     }
 
-    public List<Usuario> listarPorTipo(String tipoUsuario) {
+    public List<Medico> listarPorEspecialidade(Long especialidadeId) {
         EntityManager em = emf.createEntityManager();
-        List<Usuario> usuarios = em.createQuery("SELECT u FROM Usuario u WHERE u.tipoUsuario = :tipo", Usuario.class)
-                .setParameter("tipo", tipoUsuario)
+        List<Medico> medicos = em.createQuery("SELECT m FROM Medico m WHERE m.especialidade.id = :id", Medico.class)
+                .setParameter("id", especialidadeId)
                 .getResultList();
         em.close();
-        return usuarios;
+        return medicos;
     }
 
-    public void atualizar(Usuario usuario) {
+    public void atualizar(Medico medico) {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        em.merge(usuario);
+        em.merge(medico);
         em.getTransaction().commit();
         em.close();
     }
@@ -53,9 +53,9 @@ public class UsuarioDAO {
     public void remover(Long id) {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        Usuario usuario = em.find(Usuario.class, id);
-        if (usuario != null) {
-            em.remove(usuario);
+        Medico medico = em.find(Medico.class, id);
+        if (medico != null) {
+            em.remove(medico);
         }
         em.getTransaction().commit();
         em.close();

@@ -1,7 +1,8 @@
-package br.com.NexusSaude;
+package br.com.NexusSaude.persistencia;
 
 import java.util.List;
 
+import br.com.NexusSaude.entidades.Pagamento;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;

@@ -1,5 +1,8 @@
-package br.com.NexusSaude;
+package br.com.NexusSaude.main;
 
+import br.com.NexusSaude.entidades.Especialidade;
+import br.com.NexusSaude.entidades.Medico;
+import br.com.NexusSaude.entidades.Usuario;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;

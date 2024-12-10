@@ -1,4 +1,4 @@
-package br.com.NexusSaude;
+package br.com.NexusSaude.main;
 
 public class Main {
 

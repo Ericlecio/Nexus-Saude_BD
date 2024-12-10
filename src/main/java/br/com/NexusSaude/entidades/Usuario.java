@@ -1,4 +1,4 @@
-package br.com.NexusSaude;
+package br.com.NexusSaude.entidades;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

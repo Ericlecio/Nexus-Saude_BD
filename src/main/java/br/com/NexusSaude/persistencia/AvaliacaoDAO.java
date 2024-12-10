@@ -1,7 +1,10 @@
-package br.com.NexusSaude;
+package br.com.NexusSaude.persistencia;
 
 import jakarta.persistence.EntityManager;
 import java.util.List;
+
+import br.com.NexusSaude.JPAUtil;
+import br.com.NexusSaude.entidades.Avaliacao;
 
 public class AvaliacaoDAO {
     public void salvar(Avaliacao avaliacao) {

@@ -1,4 +1,4 @@
-package br.com.NexusSaude;
+package br.com.NexusSaude.entidades;
 
 import java.time.LocalDate;
 
