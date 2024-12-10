@@ -1,6 +1,6 @@
 package br.com.NexusSaude;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import java.util.List;
 
 public class ConsultaDAO {

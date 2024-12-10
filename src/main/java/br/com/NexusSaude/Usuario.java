@@ -1,6 +1,8 @@
 package br.com.NexusSaude;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDate;
 
 @Entity
@@ -10,15 +12,18 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nome;
-
+    @NotNull
     @Column(unique = true, nullable = false)
     private String email;
 
+    @NotNull
     @Column(nullable = false)
     private String senha;
 
-    @Column(name = "tipo_usuario", nullable = false)
+    @NotNull
+    private String nome;
+
+    @NotNull
     private String tipoUsuario;
 
     private String telefone;
@@ -103,6 +108,11 @@ public class Usuario {
 	}
 
 	public void setTipoUsuario(String string) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setSenha(String string) {
 		// TODO Auto-generated method stub
 		
 	}

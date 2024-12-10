@@ -1,4 +1,4 @@
-package br.com.AulaJPA;
+package br.com.NexusSAude;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

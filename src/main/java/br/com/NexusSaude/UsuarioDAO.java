@@ -1,9 +1,10 @@
 package br.com.NexusSaude;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import java.util.List;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 
 public class UsuarioDAO {
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("crud-basic");
