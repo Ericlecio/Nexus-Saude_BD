@@ -17,10 +17,16 @@ public class Medico {
     @JoinColumn(name = "especialidade_id", nullable = false)
     private Especialidade especialidade;
 
+    @Column(nullable = false, unique = true)
     private String crm;
-    private String consultorio;
+
+  
     private Double valorConsulta;
+
+    
     private Double avaliacao;
+
+    private String consultorio;
 
     @Lob
     private String horariosDisponiveis;

@@ -1,40 +1,39 @@
 package br.com.NexusSaude;
-	
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.util.List;
 
-public class PessoaDAO {
-	EntityManagerFactory emf = Persistence.createEntityManagerFactory("crud-basic");
-    EntityManager em = emf.createEntityManager();
-    
-    public void salvar(Pessoa pessoa) {
+public class PacienteDAO {
+    EntityManagerFactory emf = Persistence.createEntityManagerFactory("crud-basic");
+
+    public void salvar(Paciente paciente) {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        em.persist(pessoa);
+        em.persist(paciente);
         em.getTransaction().commit();
         em.close();
     }
 
-    public Pessoa buscarPorId(Long id) {
+    public Paciente buscarPorId(Long id) {
         EntityManager em = emf.createEntityManager();
-        Pessoa pessoa = em.find(Pessoa.class, id);
+        Paciente paciente = em.find(Paciente.class, id);
         em.close();
-        return pessoa;
+        return paciente;
     }
 
-    public List<Pessoa> listar() {
+    public List<Paciente> listar() {
         EntityManager em = emf.createEntityManager();
-        List<Pessoa> pessoas = em.createQuery("FROM Pessoa", Pessoa.class).getResultList();
+        List<Paciente> pacientes = em.createQuery("FROM Paciente", Paciente.class).getResultList();
         em.close();
-        return pessoas;
+        return pacientes;
     }
 
-    public void atualizar(Pessoa pessoa) {
+    public void atualizar(Paciente paciente) {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        em.merge(pessoa);
+        em.merge(paciente);
         em.getTransaction().commit();
         em.close();
     }
@@ -42,9 +41,9 @@ public class PessoaDAO {
     public void remover(Long id) {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        Pessoa pessoa = em.find(Pessoa.class, id);
-        if (pessoa != null) {
-            em.remove(pessoa);
+        Paciente paciente = em.find(Paciente.class, id);
+        if (paciente != null) {
+            em.remove(paciente);
         }
         em.getTransaction().commit();
         em.close();

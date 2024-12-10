@@ -96,4 +96,14 @@ public class Usuario {
 	public void setDataAtualizacao(LocalDate dataAtualizacao) {
 		this.dataAtualizacao = dataAtualizacao;
 	}
+
+	public void setEmail(String string) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setTipoUsuario(String string) {
+		// TODO Auto-generated method stub
+		
+	}
 }

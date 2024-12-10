@@ -1,43 +1,61 @@
 package br.com.NexusSaude;
 
-
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 
 public class Main2 {
     public static void main(String[] args) {
-        PessoaDAO dao = new PessoaDAO();
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("nexus-saude");
+        EntityManager em = emf.createEntityManager();
 
-        // Criar e salvar Pessoa com Endereços
-        Pessoa pessoa = new Pessoa();
-        pessoa.setNome("João Silva");
+        try {
+            em.getTransaction().begin();
 
-        Endereco endereco1 = new Endereco();
-        endereco1.setLogradouro("Rua A");
-        endereco1.setCidade("Recife");
-        endereco1.setPessoa(pessoa);
+            // Criar ou buscar a especialidade "Cardiologia"
+            Especialidade especialidade = em.createQuery(
+                "SELECT e FROM Especialidade e WHERE e.nome = :nome", Especialidade.class)
+                .setParameter("nome", "Cardiologia")
+                .getResultStream()
+                .findFirst()
+                .orElse(null);
 
-        Endereco endereco2 = new Endereco();
-        endereco2.setLogradouro("Rua B");
-        endereco2.setCidade("Olinda");
-        endereco2.setPessoa(pessoa);
+            if (especialidade == null) {
+                System.out.println("Criando uma nova especialidade...");
+                especialidade = new Especialidade();
+                especialidade.setNome("Cardiologia");
+                em.persist(especialidade);
+                System.out.println("Especialidade criada com ID: " + especialidade.getId());
+            } else {
+                System.out.println("Especialidade encontrada: " + especialidade.getNome());
+            }
 
-        pessoa.setEnderecos(new ArrayList<Endereco>());
-        pessoa.getEnderecos().add(endereco1);
-        pessoa.getEnderecos().add(endereco2);
+            // Criar um usuário
+            Usuario usuario = new Usuario();
+            usuario.setNome("Maria Oliveira");
+            usuario.setEmail("maria@email.com");
+            usuario.setSexo("senha123");
+            usuario.setTipoUsuario("medico");
+            usuario.setStatus("ativo");
+            em.persist(usuario);
 
-        dao.salvar(pessoa);
+            // Criar um médico associado ao usuário e à especialidade
+            Medico medico = new Medico();
+            medico.setUsuario(usuario);
+            medico.setEspecialidade(especialidade);
+            medico.setCrm("123456");
+            medico.setHorariosDisponiveis("Segunda, Quarta, Sexta - 08:00 às 12:00");
+            em.persist(medico);
 
-        // Listar todas as Pessoas
-        List<Pessoa> pessoas = dao.listar();
-        for (Pessoa pessoa1 : pessoas) {
-            System.out.println(pessoa1.getNome());
+            em.getTransaction().commit();
+
+            System.out.println("Médico criado com ID: " + medico.getId());
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            e.printStackTrace();
+        } finally {
+            em.close();
+            emf.close();
         }
-
-
-        // Buscar Pessoa por ID
-        Pessoa pessoaBuscada = dao.buscarPorId(1L);
-        System.out.println("Pessoa encontrada: " + pessoaBuscada.getNome());
     }
 }
-

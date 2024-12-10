@@ -1,13 +1,11 @@
 package br.com.NexusSaude;
 
-/**
- * Hello world!
- *
- */
-public class App 
-{
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
+import jakarta.persistence.EntityManager;
+
+public class App {
+    public static void main(String[] args) {
+        EntityManager em = JPAUtil.getEntityManager();
+        System.out.println("Conexão estabelecida com sucesso!");
+        em.close();
     }
 }
