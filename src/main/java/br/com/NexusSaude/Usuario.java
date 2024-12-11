@@ -12,18 +12,19 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @NotNull(message = "O nome não pode ser nulo.")
+    private String nome;
+
+    @NotNull(message = "O email não pode ser nulo.")
     @Column(unique = true, nullable = false)
     private String email;
 
-    @NotNull
+    @NotNull(message = "A senha não pode ser nula.")
     @Column(nullable = false)
     private String senha;
 
-    @NotNull
-    private String nome;
-
-    @NotNull
+    @NotNull(message = "O tipo de usuário não pode ser nulo.")
+    @Column(name = "tipoUsuario", nullable = false)
     private String tipoUsuario;
 
     private String telefone;
@@ -38,12 +39,44 @@ public class Usuario {
 
     private LocalDate dataAtualizacao;
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public String getNome() {
 		return nome;
 	}
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
+
+	public String getTipoUsuario() {
+		return tipoUsuario;
+	}
+
+	public void setTipoUsuario(String tipoUsuario) {
+		this.tipoUsuario = tipoUsuario;
 	}
 
 	public String getTelefone() {
@@ -94,26 +127,19 @@ public class Usuario {
 		this.status = status;
 	}
 
+	public LocalDate getDataCriacao() {
+		return dataCriacao;
+	}
+
+	public void setDataCriacao(LocalDate dataCriacao) {
+		this.dataCriacao = dataCriacao;
+	}
+
 	public LocalDate getDataAtualizacao() {
 		return dataAtualizacao;
 	}
 
 	public void setDataAtualizacao(LocalDate dataAtualizacao) {
 		this.dataAtualizacao = dataAtualizacao;
-	}
-
-	public void setEmail(String string) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void setTipoUsuario(String string) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void setSenha(String string) {
-		// TODO Auto-generated method stub
-		
 	}
 }

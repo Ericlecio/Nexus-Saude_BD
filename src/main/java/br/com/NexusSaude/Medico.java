@@ -9,23 +9,19 @@ public class Medico {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(optional = false, cascade = CascadeType.ALL) // Garantir que um Usuario seja sempre criado
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "especialidade_id", nullable = false)
     private Especialidade especialidade;
 
     @Column(nullable = false, unique = true)
     private String crm;
 
-  
     private Double valorConsulta;
-
-    
     private Double avaliacao;
-
     private String consultorio;
 
     @Lob
@@ -63,14 +59,6 @@ public class Medico {
 		this.crm = crm;
 	}
 
-	public String getConsultorio() {
-		return consultorio;
-	}
-
-	public void setConsultorio(String consultorio) {
-		this.consultorio = consultorio;
-	}
-
 	public Double getValorConsulta() {
 		return valorConsulta;
 	}
@@ -85,6 +73,14 @@ public class Medico {
 
 	public void setAvaliacao(Double avaliacao) {
 		this.avaliacao = avaliacao;
+	}
+
+	public String getConsultorio() {
+		return consultorio;
+	}
+
+	public void setConsultorio(String consultorio) {
+		this.consultorio = consultorio;
 	}
 
 	public String getHorariosDisponiveis() {

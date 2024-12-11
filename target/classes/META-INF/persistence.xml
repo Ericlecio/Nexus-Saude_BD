@@ -1,22 +1,31 @@
 <persistence xmlns="https://jakarta.ee/xml/ns/persistence" version="3.1">
-    <persistence-unit name="nexus-saude">
-        <class>br.com.NexusSaude.Usuario</class>
-        <class>br.com.NexusSaude.Paciente</class>
-        <class>br.com.NexusSaude.Medico</class>
-        <class>br.com.NexusSaude.Consulta</class>
-        <class>br.com.NexusSaude.Pagamento</class>
-        <class>br.com.NexusSaude.Avaliacao</class>
-        <class>br.com.NexusSaude.Especialidade</class>
-        <class>br.com.NexusSaude.PlanoSaude</class>
-        <class>br.com.NexusSaude.Telemedicina</class>
-        <properties>
-            <property name="jakarta.persistence.jdbc.driver" value="org.h2.Driver"/>
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:h2:mem:testdb"/>
-            <property name="jakarta.persistence.jdbc.user" value="sa"/>
-            <property name="jakarta.persistence.jdbc.password" value=""/>
-            <property name="hibernate.hbm2ddl.auto" value="update"/>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
-            <property name="hibernate.show_sql" value="true"/>
-        </properties>
-    </persistence-unit>
+	<persistence-unit name="nexus-saude">
+		<class>br.com.NexusSaude.Usuario</class>
+		<class>br.com.NexusSaude.Paciente</class>
+		<class>br.com.NexusSaude.Medico</class>
+		<class>br.com.NexusSaude.Consulta</class>
+		<class>br.com.NexusSaude.Pagamento</class>
+		<class>br.com.NexusSaude.Avaliacao</class>
+		<class>br.com.NexusSaude.Especialidade</class>
+		<class>br.com.NexusSaude.PlanoSaude</class>
+		<class>br.com.NexusSaude.Telemedicina</class>
+		<properties>
+			<property name="jakarta.persistence.jdbc.driver"
+				value="org.h2.Driver" />
+			<property name="jakarta.persistence.jdbc.url"
+				value="jdbc:h2:mem:testdb" />
+			<property name="jakarta.persistence.jdbc.user" value="sa" />
+			<property name="jakarta.persistence.jdbc.password" value="" />
+			<property name="hibernate.hbm2ddl.auto" value="update" />
+			<property name="hibernate.dialect"
+				value="org.hibernate.dialect.H2Dialect" />
+			<property name="hibernate.show_sql" value="true" />
+			
+			<property name="hibernate.use_sql_comments" value="true" />
+			<property name="hibernate.type" value="trace" />
+			<property name="hibernate.type.descriptor.sql.BasicBinder"
+				value="trace" />
+
+		</properties>
+	</persistence-unit>
 </persistence>

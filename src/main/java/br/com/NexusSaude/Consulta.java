@@ -10,15 +10,15 @@ public class Consulta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "paciente_id", nullable = false)
     private Paciente paciente;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "medico_id", nullable = false)
     private Medico medico;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "especialidade_id", nullable = false)
     private Especialidade especialidade;
 
