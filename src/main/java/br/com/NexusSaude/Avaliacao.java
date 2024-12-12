@@ -38,5 +38,30 @@ public class Avaliacao {
 		this.nota = nota;
 	}
 
+	public void setComentario(String string) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setDataCriacao(LocalDate now) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public Object getId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getComentario() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void setConsulta(Consulta consulta2) {
+		// TODO Auto-generated method stub
+		
+	}
+
     // Getters e Setters
 }

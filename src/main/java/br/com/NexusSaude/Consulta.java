@@ -85,4 +85,9 @@ public class Consulta {
 	public void setValor(Double valor) {
 		this.valor = valor;
 	}
+
+	public void setHorarioEscolhido(String horarioEscolhido) {
+		// TODO Auto-generated method stub
+		
+	}
 }
