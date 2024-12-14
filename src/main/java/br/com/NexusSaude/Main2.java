@@ -1,248 +1,233 @@
 package br.com.NexusSaude;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main2 {
+
+    // Método principal
     public static void main(String[] args) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("nexus-saude");
-        EntityManager em = emf.createEntityManager();
+        EntityManager em = JPAUtil.getEntityManager(); // Obtenha o EntityManager da classe JPAUtil
+        Scanner scanner = new Scanner(System.in);
 
-        try (Scanner scanner = new Scanner(System.in)) {
-            System.out.println("### INICIANDO OPERAÇÕES COM PAGAMENTOS ###");
+        try {
+            menuAgendamento(em, scanner);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Erro no sistema de agendamento.");
+        } finally {
+            em.close();
+            scanner.close();
+        }
+    }
 
-            // === CRIAR DADOS INICIAIS (GARANTIR FUNCIONAMENTO) ===
-            criarDadosIniciais(em);
+    // Menu principal do agendamento
+    public static void menuAgendamento(EntityManager em, Scanner scanner) {
+        boolean continuar = true;
 
-            // === MENU PRINCIPAL ===
-            boolean continuar = true;
-            while (continuar) {
-                try {
-                    System.out.println("\n### MENU ###");
-                    System.out.println("1. Inserir Pagamento");
-                    System.out.println("2. Atualizar Pagamento");
-                    System.out.println("3. Consultar Pagamentos");
-                    System.out.println("4. Deletar Pagamento");
-                    System.out.println("5. Sair");
-                    System.out.print("Escolha uma opção: ");
-                    int opcao = scanner.nextInt();
-                    scanner.nextLine(); // Limpar buffer
+        while (continuar) {
+            System.out.println("\n### MENU AGENDAMENTO ###");
+            System.out.println("1. Agendar Consulta");
+            System.out.println("2. Listar Consultas");
+            System.out.println("3. Realizar Pagamento");
+            System.out.println("4. Listar Pagamentos");
+            System.out.println("5. Voltar");
+            System.out.print("Escolha uma opção: ");
 
-                    switch (opcao) {
+            try {
+                int opcao = scanner.nextInt();
+                scanner.nextLine(); // Limpar buffer
+
+                switch (opcao) {
                     case 1:
-                        inserirPagamento(em, scanner);
+                        agendarConsulta(em, scanner);
                         break;
                     case 2:
-                        atualizarPagamento(em, scanner);
+                        listarConsultas(em);
                         break;
                     case 3:
-                        consultarPagamentos(em);
+                        realizarPagamento(em, scanner);
                         break;
                     case 4:
-                        deletarPagamento(em, scanner);
+                        listarPagamentos(em);
                         break;
                     case 5:
                         continuar = false;
                         break;
                     default:
-                        System.out.println("Opção inválida!");
-                        break;
+                        System.out.println("Opção inválida! Tente novamente.");
                 }
-                } catch (InputMismatchException e) {
-                    System.out.println("Entrada inválida! Tente novamente.");
-                    scanner.nextLine(); // Limpar buffer
-                }
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada inválida! Por favor, tente novamente.");
+                scanner.nextLine(); // Limpar buffer após erro
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Ocorreu um erro no sistema.");
-        } finally {
-            em.close();
-            emf.close();
-            System.out.println("\nConexão encerrada.");
         }
     }
 
-    private static void criarDadosIniciais(EntityManager em) {
+    // Método para agendar consulta
+    private static void agendarConsulta(EntityManager em, Scanner scanner) {
+        System.out.println("\n### AGENDAR CONSULTA ###");
+
+        // Listar médicos disponíveis
+        List<Medico> medicos = em.createQuery("SELECT m FROM Medico m", Medico.class).getResultList();
+        if (medicos.isEmpty()) {
+            System.out.println("Nenhum médico cadastrado. Cadastre médicos antes de agendar consultas.");
+            return;
+        }
+        System.out.println("Médicos disponíveis:");
+        for (Medico medico : medicos) {
+            System.out.println("ID: " + medico.getId() + ", Nome: " + medico.getUsuario().getNome() +
+                    ", Especialidade: " + medico.getEspecialidade().getNome() +
+                    ", Horários Disponíveis: " + medico.getHorariosDisponiveis());
+        }
+
+        Medico medicoSelecionado = null;
+        while (medicoSelecionado == null) {
+            try {
+                System.out.print("Digite o ID do médico: ");
+                long medicoId = scanner.nextLong();
+                scanner.nextLine();
+                medicoSelecionado = em.find(Medico.class, medicoId);
+                if (medicoSelecionado == null) {
+                    System.out.println("Médico não encontrado. Tente novamente.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada inválida! Insira um número válido.");
+                scanner.nextLine();
+            }
+        }
+
+        // Listar pacientes disponíveis
+        List<Paciente> pacientes = em.createQuery("SELECT p FROM Paciente p", Paciente.class).getResultList();
+        if (pacientes.isEmpty()) {
+            System.out.println("Nenhum paciente cadastrado. Cadastre pacientes antes de agendar consultas.");
+            return;
+        }
+        System.out.println("Pacientes cadastrados:");
+        for (Paciente paciente : pacientes) {
+            System.out.println("ID: " + paciente.getId() + ", Nome: " + paciente.getUsuario().getNome());
+        }
+
+        Paciente pacienteSelecionado = null;
+        while (pacienteSelecionado == null) {
+            try {
+                System.out.print("Digite o ID do paciente: ");
+                long pacienteId = scanner.nextLong();
+                scanner.nextLine();
+                pacienteSelecionado = em.find(Paciente.class, pacienteId);
+                if (pacienteSelecionado == null) {
+                    System.out.println("Paciente não encontrado. Tente novamente.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada inválida! Insira um número válido.");
+                scanner.nextLine();
+            }
+        }
+
+        // Solicitar data da consulta
+        System.out.print("Digite a data e hora da consulta (formato: YYYY-MM-DDTHH:MM): ");
+        String dataHora = scanner.nextLine();
+        LocalDateTime dataConsulta;
         try {
-            em.getTransaction().begin();
-
-            System.out.println("Criando dados iniciais...");
-
-            Especialidade especialidade = new Especialidade();
-            especialidade.setNome("Cardiologia");
-            em.persist(especialidade);
-
-            Usuario medicoUsuario = new Usuario();
-            medicoUsuario.setNome("Dr. João");
-            medicoUsuario.setEmail("joao@exemplo.com");
-            medicoUsuario.setSenha("1234");
-            medicoUsuario.setTipoUsuario("medico");
-            medicoUsuario.setStatus("ativo");
-            em.persist(medicoUsuario);
-
-            Medico medico = new Medico();
-            medico.setUsuario(medicoUsuario);
-            medico.setCrm("123456");
-            medico.setEspecialidade(especialidade);
-            medico.setHorariosDisponiveis("8h - 12h");
-            em.persist(medico);
-
-            Usuario pacienteUsuario = new Usuario();
-            pacienteUsuario.setNome("Maria");
-            pacienteUsuario.setEmail("maria@exemplo.com");
-            pacienteUsuario.setSenha("1234");
-            pacienteUsuario.setTipoUsuario("paciente");
-            pacienteUsuario.setStatus("ativo");
-            em.persist(pacienteUsuario);
-
-            Paciente paciente = new Paciente();
-            paciente.setUsuario(pacienteUsuario);
-            paciente.setDataRegistro(LocalDate.now());
-            em.persist(paciente);
-
-            Consulta consultaInicial = new Consulta();
-            consultaInicial.setEspecialidade(especialidade);
-            consultaInicial.setMedico(medico);
-            consultaInicial.setPaciente(paciente);
-            consultaInicial.setDataConsulta(LocalDateTime.now().plusDays(7));
-            consultaInicial.setValor(200.00);
-            consultaInicial.setStatus("Agendada");
-            em.persist(consultaInicial);
-
-            em.getTransaction().commit();
-            System.out.println("Dados iniciais criados com sucesso!");
+            dataConsulta = LocalDateTime.parse(dataHora);
         } catch (Exception e) {
-            em.getTransaction().rollback();
-            System.out.println("Erro ao criar dados iniciais: " + e.getMessage());
+            System.out.println("Data e hora inválidas. Tente novamente.");
+            return;
         }
+
+        System.out.print("Digite o valor da consulta: ");
+        double valorConsulta;
+        try {
+            valorConsulta = scanner.nextDouble();
+            scanner.nextLine();
+        } catch (InputMismatchException e) {
+            System.out.println("Valor inválido. Tente novamente.");
+            scanner.nextLine();
+            return;
+        }
+
+        // Criar consulta
+        em.getTransaction().begin();
+        Consulta consulta = new Consulta();
+        consulta.setMedico(medicoSelecionado);
+        consulta.setPaciente(pacienteSelecionado);
+        consulta.setEspecialidade(medicoSelecionado.getEspecialidade());
+        consulta.setDataConsulta(dataConsulta);
+        consulta.setValor(valorConsulta);
+        consulta.setStatus("Agendada");
+        em.persist(consulta);
+        em.getTransaction().commit();
+
+        System.out.println("Consulta agendada com sucesso! ID: " + consulta.getId() +
+                ", Médico: " + medicoSelecionado.getUsuario().getNome() +
+                ", Paciente: " + pacienteSelecionado.getUsuario().getNome() +
+                ", Data: " + consulta.getDataConsulta());
     }
 
-    private static void inserirPagamento(EntityManager em, Scanner scanner) {
-        System.out.println("\n### INSERIR PAGAMENTO ###");
+    // Listar consultas
+    private static void listarConsultas(EntityManager em) {
+        System.out.println("\n### LISTAR CONSULTAS ###");
 
         List<Consulta> consultas = em.createQuery("SELECT c FROM Consulta c", Consulta.class).getResultList();
         if (consultas.isEmpty()) {
-            System.out.println("Nenhuma consulta disponível. Crie uma consulta antes de registrar um pagamento.");
+            System.out.println("Nenhuma consulta encontrada.");
+        } else {
+            for (Consulta consulta : consultas) {
+                System.out.println("ID: " + consulta.getId() +
+                        ", Médico: " + consulta.getMedico().getUsuario().getNome() +
+                        ", Paciente: " + consulta.getPaciente().getUsuario().getNome() +
+                        ", Data: " + consulta.getDataConsulta() +
+                        ", Valor: " + consulta.getValor() +
+                        ", Status: " + consulta.getStatus());
+            }
+        }
+    }
+
+    // Realizar pagamento
+    private static void realizarPagamento(EntityManager em, Scanner scanner) {
+        System.out.println("\n### REALIZAR PAGAMENTO ###");
+
+        listarConsultas(em);
+
+        System.out.print("Digite o ID da consulta para realizar o pagamento: ");
+        long consultaId = scanner.nextLong();
+        scanner.nextLine();
+
+        Consulta consulta = em.find(Consulta.class, consultaId);
+        if (consulta == null) {
+            System.out.println("Consulta não encontrada.");
             return;
         }
-
-        System.out.println("Consultas disponíveis:");
-        for (Consulta c : consultas) {
-            System.out.println("ID: " + c.getId() + ", Data: " + c.getDataConsulta() + ", Valor: " + c.getValor());
-        }
-
-        Consulta consultaAssociada = null;
-        while (consultaAssociada == null) {
-            try {
-                System.out.print("Digite o ID da consulta para associar ao pagamento: ");
-                long consultaId = scanner.nextLong();
-                scanner.nextLine(); // Limpar buffer
-                consultaAssociada = em.find(Consulta.class, consultaId);
-                if (consultaAssociada == null) {
-                    System.out.println("Consulta não encontrada. Tente novamente.");
-                }
-            } catch (InputMismatchException e) {
-                System.out.println("Entrada inválida! Por favor, insira um número.");
-                scanner.nextLine();
-            }
-        }
-
-        double valorPagamento = 0;
-        while (valorPagamento <= 0) {
-            try {
-                System.out.print("Digite o valor do pagamento: ");
-                valorPagamento = scanner.nextDouble();
-                scanner.nextLine();
-                if (valorPagamento <= 0) {
-                    System.out.println("O valor deve ser maior que zero.");
-                }
-            } catch (InputMismatchException e) {
-                System.out.println("Entrada inválida! Por favor, insira um valor numérico.");
-                scanner.nextLine();
-            }
-        }
-
-        System.out.print("Digite a forma de pagamento (ex.: Cartão, Pix, Boleto): ");
-        String formaPagamento = scanner.nextLine();
 
         em.getTransaction().begin();
         Pagamento pagamento = new Pagamento();
-        pagamento.setConsulta(consultaAssociada);
-        pagamento.setDataPagamento(LocalDate.now());
-        pagamento.setValorPago(valorPagamento);
-        pagamento.setFormaPagamento(formaPagamento);
-        pagamento.setStatus("Confirmado");
+        pagamento.setConsulta(consulta);
+        pagamento.setValorPago(consulta.getValor());
+        pagamento.setFormaPagamento("Cartão"); // Forma de pagamento padrão
+        pagamento.setStatus("Pago");
         em.persist(pagamento);
         em.getTransaction().commit();
 
-        System.out.println("Pagamento registrado com sucesso! ID: " + pagamento.getId());
-    }
-    
-    private static void atualizarPagamento(EntityManager em, Scanner scanner) {
-        System.out.println("\n### ATUALIZAR PAGAMENTO ###");
-
-        System.out.print("Digite o ID do pagamento para atualizar: ");
-        long pagamentoId = scanner.nextLong();
-        scanner.nextLine();
-
-        Pagamento pagamento = em.find(Pagamento.class, pagamentoId);
-        if (pagamento == null) {
-            System.out.println("Pagamento não encontrado.");
-            return;
-        }
-
-        System.out.println("Pagamento atual: ID " + pagamento.getId() + ", Valor: " + pagamento.getValorPago() +
-                ", Forma: " + pagamento.getFormaPagamento() + ", Status: " + pagamento.getStatus());
-
-        System.out.print("Digite o novo status do pagamento (ex.: Confirmado, Pendente, Cancelado): ");
-        String novoStatus = scanner.nextLine();
-
-        em.getTransaction().begin();
-        pagamento.setStatus(novoStatus);
-        em.merge(pagamento);
-        em.getTransaction().commit();
-
-        System.out.println("Pagamento atualizado com sucesso! Novo status: " + pagamento.getStatus());
+        System.out.println("Pagamento realizado com sucesso! ID do Pagamento: " + pagamento.getId());
     }
 
-    private static void consultarPagamentos(EntityManager em) {
-        System.out.println("\n### CONSULTAR PAGAMENTOS ###");
+    // Listar pagamentos
+    private static void listarPagamentos(EntityManager em) {
+        System.out.println("\n### LISTAR PAGAMENTOS ###");
 
         List<Pagamento> pagamentos = em.createQuery("SELECT p FROM Pagamento p", Pagamento.class).getResultList();
         if (pagamentos.isEmpty()) {
             System.out.println("Nenhum pagamento encontrado.");
         } else {
-            for (Pagamento p : pagamentos) {
-                System.out.println("ID: " + p.getId() + ", Valor: " + p.getValorPago() + ", Forma: " + p.getFormaPagamento() +
-                        ", Data: " + p.getDataPagamento() + ", Status: " + p.getStatus());
+            for (Pagamento pagamento : pagamentos) {
+                System.out.println("ID: " + pagamento.getId() +
+                        ", Consulta: " + pagamento.getConsulta().getId() +
+                        ", Valor Pago: " + pagamento.getValorPago() +
+                        ", Status: " + pagamento.getStatus());
             }
         }
-    }
-
-    private static void deletarPagamento(EntityManager em, Scanner scanner) {
-        System.out.println("\n### DELETAR PAGAMENTO ###");
-
-        System.out.print("Digite o ID do pagamento para deletar: ");
-        long pagamentoId = scanner.nextLong();
-        scanner.nextLine();
-
-        Pagamento pagamento = em.find(Pagamento.class, pagamentoId);
-        if (pagamento == null) {
-            System.out.println("Pagamento não encontrado.");
-            return;
-        }
-
-        em.getTransaction().begin();
-        em.remove(pagamento);
-        em.getTransaction().commit();
-
-        System.out.println("Pagamento excluído com sucesso! ID: " + pagamento.getId());
     }
 }

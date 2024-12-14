@@ -22,10 +22,10 @@ public class MainSistemaNexus {
 
             switch (opcao) {
                 case 1:
-                    MainCadastroMedicosPacientes.menuCadastro(em, scanner);
+                    Main1.menuCadastro(em, scanner);
                     break;
                 case 2:
-                    MainAgendamentoEConsulta.menuAgendamento(em, scanner);
+                    Main2.menuAgendamento(em, scanner);
                     break;
                 case 3:
                     continuar = false;
