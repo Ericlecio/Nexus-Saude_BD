@@ -1,9 +1,9 @@
 package br.com.NexusSaude;
 
-import java.time.LocalDate;
-
 import jakarta.persistence.*;
-
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "avaliacoes")
@@ -16,7 +16,6 @@ public class Avaliacao {
     @JoinColumn(name = "consulta_id", nullable = false)
     private Consulta consulta;
 
-    
     private Integer nota;
 
     @Lob
@@ -25,53 +24,70 @@ public class Avaliacao {
     @Column(name = "data_criacao", updatable = false)
     private LocalDate dataCriacao;
 
+    @OneToMany(mappedBy = "avaliacao", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comentario> comentarios = new ArrayList<>();
+
     @PrePersist
     public void prePersist() {
         this.dataCriacao = LocalDate.now();
     }
 
-	public Integer getNota() {
-		return nota;
-	}
+    // Getters e Setters
+    public Long getId() {
+        return id;
+    }
 
-	public void setNota(Integer nota) {
-		this.nota = nota;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setComentario(String string) {
-		// TODO Auto-generated method stub
-		
-	}
+    public Consulta getConsulta() {
+        return consulta;
+    }
 
-	public void setDataCriacao(LocalDate now) {
-		// TODO Auto-generated method stub
-		
-	}
+    public void setConsulta(Consulta consulta) {
+        this.consulta = consulta;
+    }
 
-	public Object getId() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public Integer getNota() {
+        return nota;
+    }
 
-	public String getComentario() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public void setNota(Integer nota) {
+        this.nota = nota;
+    }
 
-	public void setConsulta(Consulta consulta2) {
-		// TODO Auto-generated method stub
-		
-	}
+    public String getComentario() {
+        return comentario;
+    }
 
-	public Consulta getConsulta() {
-		return consulta;
-	}
+    public void setComentario(String comentario) {
+        this.comentario = comentario;
+    }
 
-	public LocalDate getDataCriacao() {
-		return dataCriacao;
-	}
+    public LocalDate getDataCriacao() {
+        return dataCriacao;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setDataCriacao(LocalDate dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
+
+    public List<Comentario> getComentarios() {
+        return comentarios;
+    }
+
+    public void setComentarios(List<Comentario> comentarios) {
+        this.comentarios = comentarios;
+    }
+
+    public void adicionarComentario(Comentario comentario) {
+        comentarios.add(comentario);
+        comentario.setAvaliacao(this);
+    }
+
+    public void removerComentario(Comentario comentario) {
+        comentarios.remove(comentario);
+        comentario.setAvaliacao(null);
+    }
 }

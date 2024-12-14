@@ -6,8 +6,9 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "consultas")
 public class Consulta {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Certifique-se de que a estratégia está configurada
     private Long id;
 
     @ManyToOne(optional = false)
@@ -26,10 +27,7 @@ public class Consulta {
 
     @Column(nullable = false)
     private String status;
-
-    @Column(nullable = false)
-    private Double valor;
-
+    
 	public Long getId() {
 		return id;
 	}
@@ -76,14 +74,6 @@ public class Consulta {
 
 	public void setStatus(String status) {
 		this.status = status;
-	}
-
-	public Double getValor() {
-		return valor;
-	}
-
-	public void setValor(Double valor) {
-		this.valor = valor;
 	}
 
 	public void setHorarioEscolhido(String horarioEscolhido) {

@@ -14,7 +14,8 @@ public class MainSistemaNexus {
             System.out.println("\n### MENU PRINCIPAL ###");
             System.out.println("1. Sistema de Cadastro");
             System.out.println("2. Sistema de Agendamento");
-            System.out.println("3. Sair");
+            System.out.println("3. Sistema de Avaliação");
+            System.out.println("4. Sair");
             System.out.print("Escolha uma opção: ");
 
             int opcao = scanner.nextInt();
@@ -28,6 +29,9 @@ public class MainSistemaNexus {
                     Main2.menuAgendamento(em, scanner);
                     break;
                 case 3:
+                    Main3.menuComentariosEavaliacoes(em, scanner);
+                    break;
+                case 4:
                     continuar = false;
                     break;
                 default:

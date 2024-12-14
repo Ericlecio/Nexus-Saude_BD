@@ -4,7 +4,11 @@ import jakarta.persistence.EntityManager;
 import java.util.List;
 
 public class AvaliacaoDAO {
-    public void salvar(Avaliacao avaliacao) {
+    public AvaliacaoDAO(EntityManager em) {
+		// TODO Auto-generated constructor stub
+	}
+
+	public void salvar(Avaliacao avaliacao) {
         EntityManager em = (EntityManager) JPAUtil.getEntityManager();
         em.getTransaction().begin();
         em.persist(avaliacao);

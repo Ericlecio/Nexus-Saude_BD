@@ -1,7 +1,6 @@
 package br.com.NexusSaude;
 
 import jakarta.persistence.EntityManager;
-import java.time.LocalDate;
 import java.util.Scanner;
 
 public class Main1 {
