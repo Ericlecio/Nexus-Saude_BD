@@ -9,7 +9,7 @@ public class JPAUtil {
 
     static {
         try {
-            emf = Persistence.createEntityManagerFactory("nexus-saude"); // Certifique-se de usar o nome correto
+            emf = Persistence.createEntityManagerFactory("nexus-saude");
         } catch (Exception e) {
             throw new ExceptionInInitializerError("Erro ao inicializar EntityManagerFactory: " + e.getMessage());
         }
@@ -17,5 +17,11 @@ public class JPAUtil {
 
     public static EntityManager getEntityManager() {
         return emf.createEntityManager();
+    }
+
+    public static void close() {
+        if (emf != null && emf.isOpen()) {
+            emf.close();
+        }
     }
 }

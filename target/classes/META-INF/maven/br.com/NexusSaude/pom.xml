@@ -71,6 +71,21 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- Hibernate Core -->
+		<dependency>
+			<groupId>org.hibernate.orm</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>6.2.10.Final</version>
+		</dependency>
+
+		<!-- Driver JDBC (exemplo com H2 para banco em memória) -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>2.1.214</version>
+			<scope>runtime</scope>
+		</dependency>
+
 	</dependencies>
 
 

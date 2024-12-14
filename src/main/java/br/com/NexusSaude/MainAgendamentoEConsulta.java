@@ -1,72 +1,77 @@
 package br.com.NexusSaude;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
 import java.time.LocalDateTime;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
 public class MainAgendamentoEConsulta {
+
+    // Método principal
     public static void main(String[] args) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("nexus-saude");
-        EntityManager em = emf.createEntityManager();
+        EntityManager em = JPAUtil.getEntityManager(); // Obtenha o EntityManager da classe JPAUtil
+        Scanner scanner = new Scanner(System.in);
 
-        try (Scanner scanner = new Scanner(System.in)) {
-            System.out.println("### INICIANDO SISTEMA DE AGENDAMENTO DE CONSULTAS ###");
-
-            boolean continuar = true;
-            while (continuar) {
-                try {
-                    System.out.println("\n### MENU ###");
-                    System.out.println("1. Agendar Consulta");
-                    System.out.println("2. Listar Consultas");
-                    System.out.println("3. Realizar Pagamento");
-                    System.out.println("4. Listar Pagamentos");
-                    System.out.println("5. Sair");
-                    System.out.print("Escolha uma opção: ");
-                    int opcao = scanner.nextInt();
-                    scanner.nextLine(); // Limpar buffer
-
-                    switch (opcao) {
-                        case 1:
-                            agendarConsulta(em, scanner);
-                            break;
-                        case 2:
-                            listarConsultas(em);
-                            break;
-                        case 3:
-                            realizarPagamento(em, scanner);
-                            break;
-                        case 4:
-                            listarPagamentos(em);
-                            break;
-                        case 5:
-                            continuar = false;
-                            break;
-                        default:
-                            System.out.println("Opção inválida! Tente novamente.");
-                    }
-                } catch (InputMismatchException e) {
-                    System.out.println("Entrada inválida! Tente novamente.");
-                    scanner.nextLine(); // Limpar buffer
-                }
-            }
+        try {
+            menuAgendamento(em, scanner);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Erro no sistema.");
+            System.out.println("Erro no sistema de agendamento.");
         } finally {
             em.close();
-            emf.close();
-            System.out.println("\nSistema encerrado.");
+            scanner.close();
         }
     }
 
+    // Menu principal do agendamento
+    public static void menuAgendamento(EntityManager em, Scanner scanner) {
+        boolean continuar = true;
+
+        while (continuar) {
+            System.out.println("\n### MENU AGENDAMENTO ###");
+            System.out.println("1. Agendar Consulta");
+            System.out.println("2. Listar Consultas");
+            System.out.println("3. Realizar Pagamento");
+            System.out.println("4. Listar Pagamentos");
+            System.out.println("5. Voltar");
+            System.out.print("Escolha uma opção: ");
+
+            try {
+                int opcao = scanner.nextInt();
+                scanner.nextLine(); // Limpar buffer
+
+                switch (opcao) {
+                    case 1:
+                        agendarConsulta(em, scanner);
+                        break;
+                    case 2:
+                        listarConsultas(em);
+                        break;
+                    case 3:
+                        realizarPagamento(em, scanner);
+                        break;
+                    case 4:
+                        listarPagamentos(em);
+                        break;
+                    case 5:
+                        continuar = false;
+                        break;
+                    default:
+                        System.out.println("Opção inválida! Tente novamente.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada inválida! Por favor, tente novamente.");
+                scanner.nextLine(); // Limpar buffer após erro
+            }
+        }
+    }
+
+    // Método para agendar consulta
     private static void agendarConsulta(EntityManager em, Scanner scanner) {
         System.out.println("\n### AGENDAR CONSULTA ###");
 
-        // Listar médicos
+        // Listar médicos disponíveis
         List<Medico> medicos = em.createQuery("SELECT m FROM Medico m", Medico.class).getResultList();
         if (medicos.isEmpty()) {
             System.out.println("Nenhum médico cadastrado. Cadastre médicos antes de agendar consultas.");
@@ -95,7 +100,7 @@ public class MainAgendamentoEConsulta {
             }
         }
 
-        // Listar pacientes
+        // Listar pacientes disponíveis
         List<Paciente> pacientes = em.createQuery("SELECT p FROM Paciente p", Paciente.class).getResultList();
         if (pacientes.isEmpty()) {
             System.out.println("Nenhum paciente cadastrado. Cadastre pacientes antes de agendar consultas.");
@@ -162,6 +167,7 @@ public class MainAgendamentoEConsulta {
                 ", Data: " + consulta.getDataConsulta());
     }
 
+    // Listar consultas
     private static void listarConsultas(EntityManager em) {
         System.out.println("\n### LISTAR CONSULTAS ###");
 
@@ -180,6 +186,7 @@ public class MainAgendamentoEConsulta {
         }
     }
 
+    // Realizar pagamento
     private static void realizarPagamento(EntityManager em, Scanner scanner) {
         System.out.println("\n### REALIZAR PAGAMENTO ###");
 
@@ -207,6 +214,7 @@ public class MainAgendamentoEConsulta {
         System.out.println("Pagamento realizado com sucesso! ID do Pagamento: " + pagamento.getId());
     }
 
+    // Listar pagamentos
     private static void listarPagamentos(EntityManager em) {
         System.out.println("\n### LISTAR PAGAMENTOS ###");
 
