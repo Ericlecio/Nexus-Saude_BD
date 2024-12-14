@@ -20,7 +20,6 @@
 			<property name="hibernate.dialect"
 				value="org.hibernate.dialect.H2Dialect" />
 			<property name="hibernate.show_sql" value="true" />
-			
 			<property name="hibernate.use_sql_comments" value="true" />
 			<property name="hibernate.type" value="trace" />
 			<property name="hibernate.type.descriptor.sql.BasicBinder"

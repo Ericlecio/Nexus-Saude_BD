@@ -63,5 +63,15 @@ public class Avaliacao {
 		
 	}
 
-    // Getters e Setters
+	public Consulta getConsulta() {
+		return consulta;
+	}
+
+	public LocalDate getDataCriacao() {
+		return dataCriacao;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 }
