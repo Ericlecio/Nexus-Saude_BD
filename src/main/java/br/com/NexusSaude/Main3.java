@@ -24,15 +24,15 @@ public class Main3 {
     public static void menuComentariosEavaliacoes(EntityManager em, Scanner scanner) {
         ConsultaDAO consultaDAO = new ConsultaDAO(em);
         AvaliacaoDAO avaliacaoDAO = new AvaliacaoDAO(em);
-        ComentarioDAO comentarioDAO = new ComentarioDAO(em);
+
 
         boolean continuar = true;
 
         while (continuar) {
             System.out.println("\n### MENU AVALIAÇÕES E COMENTÁRIOS ###");
             System.out.println("1. Avaliar Consulta");
-            System.out.println("3. Listar Avaliações");
-            System.out.println("5. Voltar");
+            System.out.println("2. Listar Avaliações");
+            System.out.println("3. Voltar");
             System.out.print("Escolha uma opção: ");
 
             try {
@@ -108,46 +108,7 @@ public class Main3 {
         System.out.println("Avaliação salva com sucesso! ID da Avaliação: " + avaliacao.getId());
     }
 
-    private static void adicionarComentario(EntityManager em, AvaliacaoDAO avaliacaoDAO, ComentarioDAO comentarioDAO, Scanner scanner) {
-        System.out.println("\n### ADICIONAR COMENTÁRIO ###");
-
-        // Listar avaliações disponíveis
-        List<Avaliacao> avaliacoes = avaliacaoDAO.listar();
-        if (avaliacoes.isEmpty()) {
-            System.out.println("Nenhuma avaliação encontrada.");
-            return;
-        }
-
-        System.out.println("Avaliações disponíveis:");
-        for (Avaliacao avaliacao : avaliacoes) {
-            System.out.println("ID: " + avaliacao.getId() + ", Nota: " + avaliacao.getNota() +
-                    ", Comentário: " + avaliacao.getComentario() +
-                    ", Data: " + avaliacao.getDataCriacao());
-        }
-
-        System.out.print("Digite o ID da avaliação para adicionar um comentário: ");
-        long avaliacaoId = scanner.nextLong();
-        scanner.nextLine();
-
-        Avaliacao avaliacao = em.find(Avaliacao.class, avaliacaoId);
-        if (avaliacao == null) {
-            System.out.println("Avaliação não encontrada. Operação cancelada.");
-            return;
-        }
-
-        System.out.print("Digite o comentário: ");
-        String textoComentario = scanner.nextLine();
-
-        // Criar e salvar o comentário
-        Comentario comentario = new Comentario();
-        comentario.setAvaliacao(avaliacao);
-        comentario.setTexto(textoComentario);
-
-        comentarioDAO.salvar(comentario);
-
-        System.out.println("Comentário adicionado com sucesso! ID do Comentário: " + comentario.getId());
-    }
-
+    
     private static void listarAvaliacoes(AvaliacaoDAO avaliacaoDAO) {
         System.out.println("\n### LISTAR AVALIAÇÕES ###");
 
@@ -164,20 +125,5 @@ public class Main3 {
         }
     }
 
-    private static void listarComentarios(ComentarioDAO comentarioDAO) {
-        System.out.println("\n### LISTAR COMENTÁRIOS ###");
-
-        List<Comentario> comentarios = comentarioDAO.listarTodos();
-        if (comentarios.isEmpty()) {
-            System.out.println("Nenhum comentário encontrado.");
-            return;
-        }
-
-        for (Comentario comentario : comentarios) {
-            System.out.println("ID: " + comentario.getId() + 
-                               ", Avaliação ID: " + comentario.getAvaliacao().getId() + 
-                               ", Texto: " + comentario.getTexto() + 
-                               ", Data: " + comentario.getDataCriacao());
-        }
+    
     }
-}
