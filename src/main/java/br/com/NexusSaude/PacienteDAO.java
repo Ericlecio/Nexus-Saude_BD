@@ -1,52 +1,57 @@
 package br.com.NexusSaude;
 
-import java.util.List;
-
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Scanner;
 
 public class PacienteDAO {
-    EntityManagerFactory emf = Persistence.createEntityManagerFactory("crud-basic");
+    private EntityManager em;
 
-    public void salvar(Paciente paciente) {
-        EntityManager em = emf.createEntityManager();
+    public PacienteDAO(EntityManager em) {
+        this.em = em;
+    }
+
+    public void cadastrar(Scanner scanner) {
+        System.out.println("\n### CADASTRAR PACIENTE ###");
+        System.out.print("Digite o nome do paciente: ");
+        String nome = scanner.nextLine();
+
+        System.out.print("Digite o email do paciente: ");
+        String email = scanner.nextLine();
+
         em.getTransaction().begin();
+
+        Usuario usuario = new Usuario();
+        usuario.setNome(nome);
+        usuario.setEmail(email);
+        usuario.setSenha("1234");
+        usuario.setTipoUsuario("paciente");
+        usuario.setStatus("ativo");
+        em.persist(usuario);
+
+        Paciente paciente = new Paciente();
+        paciente.setUsuario(usuario);
+        paciente.setDataRegistro(LocalDate.now());
         em.persist(paciente);
+
         em.getTransaction().commit();
-        em.close();
+        System.out.println("Paciente cadastrado com sucesso! ID: " + paciente.getId());
     }
 
-    public Paciente buscarPorId(Long id) {
-        EntityManager em = emf.createEntityManager();
-        Paciente paciente = em.find(Paciente.class, id);
-        em.close();
-        return paciente;
-    }
-
-    public List<Paciente> listar() {
-        EntityManager em = emf.createEntityManager();
-        List<Paciente> pacientes = em.createQuery("FROM Paciente", Paciente.class).getResultList();
-        em.close();
-        return pacientes;
-    }
-
-    public void atualizar(Paciente paciente) {
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-        em.merge(paciente);
-        em.getTransaction().commit();
-        em.close();
-    }
-
-    public void remover(Long id) {
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-        Paciente paciente = em.find(Paciente.class, id);
-        if (paciente != null) {
-            em.remove(paciente);
+    public void listar() {
+        System.out.println("\n### LISTAR PACIENTES ###");
+        List<Paciente> pacientes = em.createQuery("SELECT p FROM Paciente p", Paciente.class).getResultList();
+        if (pacientes.isEmpty()) {
+            System.out.println("Nenhum paciente encontrado.");
+        } else {
+            for (Paciente paciente : pacientes) {
+                System.out.println("ID: " + paciente.getId() + ", Nome: " + paciente.getUsuario().getNome() +
+                        ", Email: " + paciente.getUsuario().getEmail() + 
+                        ", Data de Registro: " + paciente.getDataRegistro());
+            }
         }
-        em.getTransaction().commit();
-        em.close();
     }
+
 }

@@ -18,7 +18,7 @@ public class MainSistemaNexus {
             System.out.print("Escolha uma opção: ");
 
             int opcao = scanner.nextInt();
-            scanner.nextLine(); // Limpar buffer
+            scanner.nextLine(); 
 
             switch (opcao) {
                 case 1:
