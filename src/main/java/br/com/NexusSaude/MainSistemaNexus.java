@@ -26,7 +26,7 @@ public class MainSistemaNexus {
                     Main1.menuCadastro(em, scanner);
                     break;
                 case 2:
-                    Main2.menuAgendamento(em, scanner);
+                    Main.menuAgendamento(em, scanner);
                     break;
                 case 3:
                     Main3.menuComentariosEavaliacoes(em, scanner);

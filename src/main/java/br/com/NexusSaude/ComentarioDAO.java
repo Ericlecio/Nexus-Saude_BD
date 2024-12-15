@@ -46,7 +46,7 @@ public class ComentarioDAO {
             return em.createQuery("SELECT c FROM Comentario c", Comentario.class).getResultList();
         } catch (Exception e) {
             System.out.println("Erro ao listar comentários: " + e.getMessage());
-            return List.of(); // Retorna uma lista vazia em caso de erro
+            return List.of();
         }
     }
 }

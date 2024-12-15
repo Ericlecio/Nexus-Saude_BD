@@ -81,4 +81,36 @@ public class PagamentoDAO {
             System.out.println("Erro ao salvar pagamento: " + e.getMessage());
         }
     }
+
+    // Método para atualizar um pagamento
+    public void atualizar(Pagamento pagamento) {
+        try {
+            em.getTransaction().begin();
+            em.merge(pagamento);
+            em.getTransaction().commit();
+            System.out.println("Pagamento atualizado com sucesso! ID: " + pagamento.getId());
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            System.out.println("Erro ao atualizar pagamento: " + e.getMessage());
+        }
+    }
+
+    // Método para remover um pagamento
+    public void remover(Long id) {
+        try {
+            em.getTransaction().begin();
+            Pagamento pagamento = em.find(Pagamento.class, id);
+            if (pagamento != null) {
+                em.remove(pagamento);
+                em.getTransaction().commit();
+                System.out.println("Pagamento removido com sucesso! ID: " + id);
+            } else {
+                em.getTransaction().rollback();
+                System.out.println("Pagamento com ID " + id + " não encontrado.");
+            }
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            System.out.println("Erro ao remover pagamento: " + e.getMessage());
+        }
+    }
 }
