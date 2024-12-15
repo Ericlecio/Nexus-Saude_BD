@@ -40,7 +40,7 @@ public class Main3 {
 
             try {
                 int opcao = scanner.nextInt();
-                scanner.nextLine(); // Limpar buffer
+                scanner.nextLine();
 
                 switch (opcao) {
                     case 1:
@@ -76,7 +76,7 @@ public class Main3 {
                 }
             } catch (Exception e) {
                 System.out.println("Entrada inválida! Por favor, tente novamente.");
-                scanner.nextLine(); // Limpar buffer após erro
+                scanner.nextLine();
             }
         }
     }
@@ -205,9 +205,8 @@ public class Main3 {
             return;
         }
 
-        // Garantir que os comentários sejam carregados
         List<Comentario> comentarios = avaliacao.getComentarios();
-        comentarios.size(); // Força o carregamento da coleção, se for Lazy
+        comentarios.size();
 
         if (comentarios.isEmpty()) {
             System.out.println("Nenhum comentário encontrado para esta avaliação.");

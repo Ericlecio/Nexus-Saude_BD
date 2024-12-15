@@ -82,7 +82,27 @@ public class PagamentoDAO {
         }
     }
 
-    public void atualizar(Pagamento pagamento) {
+    public void atualizarPagamento(Scanner scanner) {
+        System.out.println("\n### ATUALIZAR PAGAMENTO ###");
+        System.out.print("Digite o ID do pagamento que deseja atualizar: ");
+        long pagamentoId = scanner.nextLong();
+        scanner.nextLine();
+
+        Pagamento pagamento = em.find(Pagamento.class, pagamentoId);
+        if (pagamento == null) {
+            System.out.println("Pagamento não encontrado.");
+            return;
+        }
+
+        System.out.print("Digite o novo valor pago: ");
+        double novoValor = scanner.nextDouble();
+        scanner.nextLine();
+        pagamento.setValorPago(novoValor);
+
+        System.out.print("Digite a nova forma de pagamento (Cartão, Dinheiro, etc.): ");
+        String novaForma = scanner.nextLine();
+        pagamento.setFormaPagamento(novaForma);
+
         try {
             em.getTransaction().begin();
             em.merge(pagamento);
@@ -94,21 +114,73 @@ public class PagamentoDAO {
         }
     }
 
-    public void remover(Long id) {
+    public void removerPagamento(Long pagamentoId) {
         try {
             em.getTransaction().begin();
-            Pagamento pagamento = em.find(Pagamento.class, id);
+            Pagamento pagamento = em.find(Pagamento.class, pagamentoId);
             if (pagamento != null) {
+                Consulta consulta = pagamento.getConsulta();
+                if (consulta != null) {
+                    consulta.setStatus("Agendada");
+                    em.merge(consulta);
+                }
                 em.remove(pagamento);
                 em.getTransaction().commit();
-                System.out.println("Pagamento removido com sucesso! ID: " + id);
+                System.out.println("Pagamento removido com sucesso! ID: " + pagamentoId);
             } else {
                 em.getTransaction().rollback();
-                System.out.println("Pagamento com ID " + id + " não encontrado.");
+                System.out.println("Pagamento com ID " + pagamentoId + " não encontrado.");
             }
         } catch (Exception e) {
             em.getTransaction().rollback();
             System.out.println("Erro ao remover pagamento: " + e.getMessage());
         }
     }
+    
+    public void realizarPagamento(Scanner scanner, ConsultaDAO consultaDAO) {
+        System.out.println("\n### REALIZAR PAGAMENTO ###");
+
+        List<Consulta> consultas = consultaDAO.listar();
+        if (consultas.isEmpty()) {
+            System.out.println("Nenhuma consulta disponível para pagamento.");
+            return;
+        }
+
+        System.out.print("Digite o ID da consulta para realizar o pagamento: ");
+        long consultaId = scanner.nextLong();
+        scanner.nextLine();
+
+        Consulta consulta = em.find(Consulta.class, consultaId);
+        if (consulta == null || !"Agendada".equals(consulta.getStatus())) {
+            System.out.println("Consulta inválida ou já paga. Operação cancelada.");
+            return;
+        }
+
+        System.out.print("Digite o valor do pagamento: ");
+        double valorPago = scanner.nextDouble();
+        scanner.nextLine();
+
+        System.out.print("Digite a forma de pagamento (Cartão, Dinheiro, PIX): ");
+        String formaPagamento = scanner.nextLine();
+        
+        Pagamento pagamento = new Pagamento();
+        pagamento.setConsulta(consulta);
+        pagamento.setValorPago(valorPago);
+        pagamento.setFormaPagamento(formaPagamento);
+        pagamento.setStatus("Pago");
+        pagamento.setDataPagamento(new java.sql.Date(System.currentTimeMillis()));
+
+        try {
+            em.getTransaction().begin();
+            em.persist(pagamento);
+            consulta.setStatus("Paga");
+            em.merge(consulta);
+            em.getTransaction().commit();
+            System.out.println("Pagamento realizado com sucesso! ID do pagamento: " + pagamento.getId());
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            System.out.println("Erro ao realizar pagamento: " + e.getMessage());
+        }
+    }
+
 }
