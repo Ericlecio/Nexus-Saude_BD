@@ -12,8 +12,6 @@ public class Especialidade {
 
     @Column(unique = true, nullable = false)
     private String nome;
-
-    
     
 
 	public Long getId() {

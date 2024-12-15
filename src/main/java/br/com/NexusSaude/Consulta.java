@@ -8,18 +8,18 @@ import java.time.LocalDateTime;
 public class Consulta {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Certifique-se de que a estratégia está configurada
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "paciente_id", nullable = false)
     private Paciente paciente;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "medico_id", nullable = false)
     private Medico medico;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "especialidade_id", nullable = false)
     private Especialidade especialidade;
 
@@ -27,57 +27,52 @@ public class Consulta {
 
     @Column(nullable = false)
     private String status;
-    
-	public Long getId() {
-		return id;
-	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public Paciente getPaciente() {
-		return paciente;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setPaciente(Paciente paciente) {
-		this.paciente = paciente;
-	}
+    public Paciente getPaciente() {
+        return paciente;
+    }
 
-	public Medico getMedico() {
-		return medico;
-	}
+    public void setPaciente(Paciente paciente) {
+        this.paciente = paciente;
+    }
 
-	public void setMedico(Medico medico) {
-		this.medico = medico;
-	}
+    public Medico getMedico() {
+        return medico;
+    }
 
-	public Especialidade getEspecialidade() {
-		return especialidade;
-	}
+    public void setMedico(Medico medico) {
+        this.medico = medico;
+    }
 
-	public void setEspecialidade(Especialidade especialidade) {
-		this.especialidade = especialidade;
-	}
+    public Especialidade getEspecialidade() {
+        return especialidade;
+    }
 
-	public LocalDateTime getDataConsulta() {
-		return dataConsulta;
-	}
+    public void setEspecialidade(Especialidade especialidade) {
+        this.especialidade = especialidade;
+    }
 
-	public void setDataConsulta(LocalDateTime dataConsulta) {
-		this.dataConsulta = dataConsulta;
-	}
+    public LocalDateTime getDataConsulta() {
+        return dataConsulta;
+    }
 
-	public String getStatus() {
-		return status;
-	}
+    public void setDataConsulta(LocalDateTime dataConsulta) {
+        this.dataConsulta = dataConsulta;
+    }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+    public String getStatus() {
+        return status;
+    }
 
-	public void setHorarioEscolhido(String horarioEscolhido) {
-		// TODO Auto-generated method stub
-		
-	}
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

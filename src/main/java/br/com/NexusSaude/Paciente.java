@@ -12,9 +12,10 @@ public class Paciente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
+
 
     @Lob
     private String historicoMedico;
@@ -25,13 +26,14 @@ public class Paciente {
     @Column(name = "data_registro", updatable = false)
     private LocalDate dataRegistro = LocalDate.now();
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "paciente_plano_saude",
         joinColumns = @JoinColumn(name = "paciente_id"),
         inverseJoinColumns = @JoinColumn(name = "plano_saude_id")
     )
     private List<PlanoSaude> planosSaude;
+
 
     public Long getId() {
         return id;

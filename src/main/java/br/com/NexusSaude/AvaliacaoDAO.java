@@ -19,6 +19,7 @@ public class AvaliacaoDAO {
     public Avaliacao buscarPorId(Long id) {
         EntityManager em = (EntityManager) JPAUtil.getEntityManager();
         Avaliacao avaliacao = em.find(Avaliacao.class, id);
+        avaliacao.getComentarios().size();
         em.close();
         return avaliacao;
     }

@@ -82,7 +82,6 @@ public class PagamentoDAO {
         }
     }
 
-    // Método para atualizar um pagamento
     public void atualizar(Pagamento pagamento) {
         try {
             em.getTransaction().begin();
@@ -95,7 +94,6 @@ public class PagamentoDAO {
         }
     }
 
-    // Método para remover um pagamento
     public void remover(Long id) {
         try {
             em.getTransaction().begin();

@@ -25,14 +25,17 @@ public class Main3 {
         ConsultaDAO consultaDAO = new ConsultaDAO(em);
         AvaliacaoDAO avaliacaoDAO = new AvaliacaoDAO(em);
 
-
         boolean continuar = true;
 
         while (continuar) {
             System.out.println("\n### MENU AVALIAÇÕES E COMENTÁRIOS ###");
             System.out.println("1. Avaliar Consulta");
             System.out.println("2. Listar Avaliações");
-            System.out.println("3. Voltar");
+            System.out.println("3. Adicionar Comentário em Avaliação");
+            System.out.println("4. Listar Comentários por Avaliação");
+            System.out.println("5. Atualizar Avaliação");
+            System.out.println("6. Remover Avaliação");
+            System.out.println("7. Voltar");
             System.out.print("Escolha uma opção: ");
 
             try {
@@ -49,8 +52,25 @@ public class Main3 {
                         break;
 
                     case 3:
+                        adicionarComentario(em, avaliacaoDAO, scanner);
+                        break;
+
+                    case 4:
+                        listarComentariosPorAvaliacao(em, avaliacaoDAO, scanner);
+                        break;
+
+                    case 5:
+                        atualizarAvaliacao(em, avaliacaoDAO, scanner);
+                        break;
+
+                    case 6:
+                        removerAvaliacao(em, avaliacaoDAO, scanner);
+                        break;
+
+                    case 7:
                         continuar = false;
                         break;
+
                     default:
                         System.out.println("Opção inválida! Tente novamente.");
                 }
@@ -64,7 +84,6 @@ public class Main3 {
     private static void avaliarConsulta(EntityManager em, ConsultaDAO consultaDAO, AvaliacaoDAO avaliacaoDAO, Scanner scanner) {
         System.out.println("\n### AVALIAR CONSULTA ###");
 
-        // Listar consultas realizadas
         List<Consulta> consultas = consultaDAO.listar();
         if (consultas.isEmpty()) {
             System.out.println("Nenhuma consulta encontrada.");
@@ -97,7 +116,6 @@ public class Main3 {
         System.out.print("Digite um comentário sobre a consulta: ");
         String comentarioTexto = scanner.nextLine();
 
-        // Criar e salvar a avaliação
         Avaliacao avaliacao = new Avaliacao();
         avaliacao.setConsulta(consulta);
         avaliacao.setNota(nota);
@@ -108,7 +126,6 @@ public class Main3 {
         System.out.println("Avaliação salva com sucesso! ID da Avaliação: " + avaliacao.getId());
     }
 
-    
     private static void listarAvaliacoes(AvaliacaoDAO avaliacaoDAO) {
         System.out.println("\n### LISTAR AVALIAÇÕES ###");
 
@@ -125,5 +142,142 @@ public class Main3 {
         }
     }
 
-    
+    private static void adicionarComentario(EntityManager em, AvaliacaoDAO avaliacaoDAO, Scanner scanner) {
+        System.out.println("\n### ADICIONAR COMENTÁRIO ###");
+
+        List<Avaliacao> avaliacoes = avaliacaoDAO.listar();
+        if (avaliacoes.isEmpty()) {
+            System.out.println("Nenhuma avaliação encontrada.");
+            return;
+        }
+
+        System.out.println("Avaliações disponíveis:");
+        for (Avaliacao avaliacao : avaliacoes) {
+            System.out.println("ID: " + avaliacao.getId() + ", Nota: " + avaliacao.getNota() + ", Comentário: " + avaliacao.getComentario());
+        }
+
+        System.out.print("Digite o ID da avaliação para adicionar um comentário: ");
+        long avaliacaoId = scanner.nextLong();
+        scanner.nextLine();
+
+        Avaliacao avaliacao = avaliacaoDAO.buscarPorId(avaliacaoId);
+        if (avaliacao == null) {
+            System.out.println("Avaliação não encontrada. Operação cancelada.");
+            return;
+        }
+
+        System.out.print("Digite o texto do comentário: ");
+        String textoComentario = scanner.nextLine();
+
+        Comentario comentario = new Comentario();
+        comentario.setAvaliacao(avaliacao);
+        comentario.setTexto(textoComentario);
+
+        em.getTransaction().begin();
+        em.persist(comentario);
+        em.getTransaction().commit();
+
+        System.out.println("Comentário adicionado com sucesso!");
     }
+
+    private static void listarComentariosPorAvaliacao(EntityManager em, AvaliacaoDAO avaliacaoDAO, Scanner scanner) {
+        System.out.println("\n### LISTAR COMENTÁRIOS POR AVALIAÇÃO ###");
+
+        List<Avaliacao> avaliacoes = avaliacaoDAO.listar();
+        if (avaliacoes.isEmpty()) {
+            System.out.println("Nenhuma avaliação encontrada.");
+            return;
+        }
+
+        System.out.println("Avaliações disponíveis:");
+        for (Avaliacao avaliacao : avaliacoes) {
+            System.out.println("ID: " + avaliacao.getId() + ", Nota: " + avaliacao.getNota());
+        }
+
+        System.out.print("Digite o ID da avaliação para listar os comentários: ");
+        long avaliacaoId = scanner.nextLong();
+        scanner.nextLine();
+
+        Avaliacao avaliacao = em.find(Avaliacao.class, avaliacaoId);
+
+        if (avaliacao == null) {
+            System.out.println("Avaliação não encontrada. Operação cancelada.");
+            return;
+        }
+
+        // Garantir que os comentários sejam carregados
+        List<Comentario> comentarios = avaliacao.getComentarios();
+        comentarios.size(); // Força o carregamento da coleção, se for Lazy
+
+        if (comentarios.isEmpty()) {
+            System.out.println("Nenhum comentário encontrado para esta avaliação.");
+            return;
+        }
+
+        System.out.println("Comentários para a avaliação ID: " + avaliacaoId);
+        for (Comentario comentario : comentarios) {
+            System.out.println("ID: " + comentario.getId() + ", Texto: " + comentario.getTexto() + ", Data: " + comentario.getDataCriacao());
+        }
+    }
+
+
+    private static void atualizarAvaliacao(EntityManager em, AvaliacaoDAO avaliacaoDAO, Scanner scanner) {
+        System.out.println("\n### ATUALIZAR AVALIAÇÃO ###");
+
+        List<Avaliacao> avaliacoes = avaliacaoDAO.listar();
+        if (avaliacoes.isEmpty()) {
+            System.out.println("Nenhuma avaliação encontrada.");
+            return;
+        }
+
+        System.out.println("Avaliações disponíveis:");
+        for (Avaliacao avaliacao : avaliacoes) {
+            System.out.println("ID: " + avaliacao.getId() + ", Nota: " + avaliacao.getNota() + ", Comentário: " + avaliacao.getComentario());
+        }
+
+        System.out.print("Digite o ID da avaliação para atualizar: ");
+        long avaliacaoId = scanner.nextLong();
+        scanner.nextLine();
+
+        Avaliacao avaliacao = avaliacaoDAO.buscarPorId(avaliacaoId);
+        if (avaliacao == null) {
+            System.out.println("Avaliação não encontrada. Operação cancelada.");
+            return;
+        }
+
+        System.out.print("Digite a nova nota (0 a 10): ");
+        int novaNota = scanner.nextInt();
+        scanner.nextLine();
+
+        System.out.print("Digite o novo comentário: ");
+        String novoComentario = scanner.nextLine();
+
+        avaliacao.setNota(novaNota);
+        avaliacao.setComentario(novoComentario);
+
+        avaliacaoDAO.atualizar(avaliacao);
+        System.out.println("Avaliação atualizada com sucesso!");
+    }
+
+    private static void removerAvaliacao(EntityManager em, AvaliacaoDAO avaliacaoDAO, Scanner scanner) {
+        System.out.println("\n### REMOVER AVALIAÇÃO ###");
+
+        List<Avaliacao> avaliacoes = avaliacaoDAO.listar();
+        if (avaliacoes.isEmpty()) {
+            System.out.println("Nenhuma avaliação encontrada.");
+            return;
+        }
+
+        System.out.println("Avaliações disponíveis:");
+        for (Avaliacao avaliacao : avaliacoes) {
+            System.out.println("ID: " + avaliacao.getId() + ", Nota: " + avaliacao.getNota() + ", Comentário: " + avaliacao.getComentario());
+        }
+
+        System.out.print("Digite o ID da avaliação para remover: ");
+        long avaliacaoId = scanner.nextLong();
+        scanner.nextLine();
+
+        avaliacaoDAO.remover(avaliacaoId);
+        System.out.println("Avaliação removida com sucesso!");
+    }
+}

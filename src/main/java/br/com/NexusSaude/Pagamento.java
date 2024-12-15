@@ -11,7 +11,7 @@ public class Pagamento {
 
     private Double valorPago;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "consulta_id", nullable = false)
     private Consulta consulta;
 
@@ -21,7 +21,6 @@ public class Pagamento {
     @Temporal(TemporalType.DATE)
     private Date dataPagamento;
 
-    // Getters e Setters
     public Long getId() {
         return id;
     }
@@ -66,8 +65,7 @@ public class Pagamento {
         return dataPagamento;
     }
 
-	public void setDataPagamento(Date dataPagamento) {
-		this.dataPagamento = dataPagamento;
-	}
-
+    public void setDataPagamento(Date dataPagamento) {
+        this.dataPagamento = dataPagamento;
+    }
 }

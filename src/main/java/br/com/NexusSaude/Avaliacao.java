@@ -12,7 +12,7 @@ public class Avaliacao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER) // Carrega a consulta automaticamente
     @JoinColumn(name = "consulta_id", nullable = false)
     private Consulta consulta;
 
@@ -24,7 +24,7 @@ public class Avaliacao {
     @Column(name = "data_criacao", updatable = false)
     private LocalDate dataCriacao;
 
-    @OneToMany(mappedBy = "avaliacao", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "avaliacao", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Comentario> comentarios = new ArrayList<>();
 
     @PrePersist
@@ -32,7 +32,6 @@ public class Avaliacao {
         this.dataCriacao = LocalDate.now();
     }
 
-    // Getters e Setters
     public Long getId() {
         return id;
     }

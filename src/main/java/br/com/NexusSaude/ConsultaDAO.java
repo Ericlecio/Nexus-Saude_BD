@@ -12,7 +12,6 @@ public class ConsultaDAO {
         this.em = em;
     }
 
-    // Método para cadastrar uma nova consulta
     public void cadastrar(Scanner scanner) {
         System.out.println("\n### CADASTRAR CONSULTA ###");
 
@@ -60,7 +59,6 @@ public class ConsultaDAO {
         System.out.println("Consulta cadastrada com sucesso! ID: " + consulta.getId());
     }
 
-    // Método para listar todas as consultas
     public List<Consulta> listar() {
         System.out.println("\n### LISTAR CONSULTAS ###");
         List<Consulta> consultas = em.createQuery("SELECT c FROM Consulta c", Consulta.class).getResultList();
@@ -78,12 +76,11 @@ public class ConsultaDAO {
         return consultas;
     }
 
-    // Método para salvar uma consulta
     public void salvar(Consulta consulta) {
         em.persist(consulta);
     }
 
-    // Método para atualizar uma consulta
+
     public void atualizar(Consulta consulta) {
         em.getTransaction().begin();
         em.merge(consulta);
@@ -91,7 +88,6 @@ public class ConsultaDAO {
         System.out.println("Consulta atualizada com sucesso! ID: " + consulta.getId());
     }
 
-    // Método para consultar uma consulta específica
     public Consulta consultarPorId(Long id) {
         Consulta consulta = em.find(Consulta.class, id);
         if (consulta == null) {
@@ -106,7 +102,6 @@ public class ConsultaDAO {
         return consulta;
     }
 
-    // Método para remover uma consulta
     public void remover(Long id) {
         em.getTransaction().begin();
         Consulta consulta = em.find(Consulta.class, id);
