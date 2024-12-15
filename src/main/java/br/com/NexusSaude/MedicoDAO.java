@@ -105,4 +105,62 @@ public class MedicoDAO {
             }
         }
     }
+
+    public void deletar(Scanner scanner) {
+        System.out.println("\n### DELETAR MÉDICO ###");
+        System.out.print("Digite o ID do médico que deseja deletar: ");
+        Long id = scanner.nextLong();
+        scanner.nextLine();
+
+        em.getTransaction().begin();
+        Medico medico = em.find(Medico.class, id);
+        if (medico != null) {
+            em.remove(medico);
+            em.getTransaction().commit();
+            System.out.println("Médico deletado com sucesso!");
+        } else {
+            System.out.println("Médico não encontrado.");
+            em.getTransaction().rollback();
+        }
+    }
+
+    public void atualizar(Scanner scanner) {
+        System.out.println("\n### ATUALIZAR MÉDICO ###");
+        System.out.print("Digite o ID do médico que deseja atualizar: ");
+        Long id = scanner.nextLong();
+        scanner.nextLine(); // Limpa o buffer
+
+        Medico medico = em.find(Medico.class, id);
+        if (medico == null) {
+            System.out.println("Médico não encontrado.");
+            return;
+        }
+
+        System.out.println("Deixe em branco caso não queira alterar o campo.");
+        System.out.print("Digite o novo nome (Atual: " + medico.getUsuario().getNome() + "): ");
+        String nome = scanner.nextLine();
+        if (!nome.isBlank()) medico.getUsuario().setNome(nome);
+
+        System.out.print("Digite o novo email (Atual: " + medico.getUsuario().getEmail() + "): ");
+        String email = scanner.nextLine();
+        if (!email.isBlank()) medico.getUsuario().setEmail(email);
+
+        System.out.print("Digite o novo CRM (Atual: " + medico.getCrm() + "): ");
+        String crm = scanner.nextLine();
+        if (!crm.isBlank()) medico.setCrm(crm);
+
+        System.out.print("Digite a nova especialidade (Atual: " + medico.getEspecialidade().getNome() + "): ");
+        String especialidadeNome = scanner.nextLine();
+        if (!especialidadeNome.isBlank()) {
+            Especialidade especialidade = new Especialidade();
+            especialidade.setNome(especialidadeNome);
+            em.persist(especialidade);
+            medico.setEspecialidade(especialidade);
+        }
+
+        em.getTransaction().begin();
+        em.merge(medico);
+        em.getTransaction().commit();
+        System.out.println("Médico atualizado com sucesso!");
+    }
 }

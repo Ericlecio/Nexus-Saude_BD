@@ -1,6 +1,7 @@
 package br.com.NexusSaude;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import jakarta.persistence.*;
 
@@ -24,43 +25,59 @@ public class Paciente {
     @Column(name = "data_registro", updatable = false)
     private LocalDate dataRegistro = LocalDate.now();
 
-	public Long getId() {
-		return id;
-	}
+    @ManyToMany
+    @JoinTable(
+        name = "paciente_plano_saude",
+        joinColumns = @JoinColumn(name = "paciente_id"),
+        inverseJoinColumns = @JoinColumn(name = "plano_saude_id")
+    )
+    private List<PlanoSaude> planosSaude;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public Usuario getUsuario() {
-		return usuario;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
-	}
+    public Usuario getUsuario() {
+        return usuario;
+    }
 
-	public String getHistoricoMedico() {
-		return historicoMedico;
-	}
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
 
-	public void setHistoricoMedico(String historicoMedico) {
-		this.historicoMedico = historicoMedico;
-	}
+    public String getHistoricoMedico() {
+        return historicoMedico;
+    }
 
-	public String getExames() {
-		return exames;
-	}
+    public void setHistoricoMedico(String historicoMedico) {
+        this.historicoMedico = historicoMedico;
+    }
 
-	public void setExames(String exames) {
-		this.exames = exames;
-	}
+    public String getExames() {
+        return exames;
+    }
 
-	public LocalDate getDataRegistro() {
-		return dataRegistro;
-	}
+    public void setExames(String exames) {
+        this.exames = exames;
+    }
 
-	public void setDataRegistro(LocalDate dataRegistro) {
-		this.dataRegistro = dataRegistro;
-	}
+    public LocalDate getDataRegistro() {
+        return dataRegistro;
+    }
+
+    public void setDataRegistro(LocalDate dataRegistro) {
+        this.dataRegistro = dataRegistro;
+    }
+
+    public List<PlanoSaude> getPlanosSaude() {
+        return planosSaude;
+    }
+
+    public void setPlanosSaude(List<PlanoSaude> planosSaude) {
+        this.planosSaude = planosSaude;
+    }
 }

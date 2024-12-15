@@ -32,7 +32,11 @@ public class Main1 {
             System.out.println("2. Cadastrar Paciente");
             System.out.println("3. Listar Médicos");
             System.out.println("4. Listar Pacientes");
-            System.out.println("5. Voltar");
+            System.out.println("5. Atualizar Médico");
+            System.out.println("6. Atualizar Paciente");
+            System.out.println("7. Deletar Médico");
+            System.out.println("8. Deletar Paciente");
+            System.out.println("9. Voltar");
             System.out.print("Escolha uma opção: ");
 
             try {
@@ -53,6 +57,18 @@ public class Main1 {
                         pacienteDAO.listar();
                         break;
                     case 5:
+                        medicoDAO.atualizar(scanner);
+                        break;
+                    case 6:
+                        pacienteDAO.atualizar(scanner);
+                        break;
+                    case 7:
+                        medicoDAO.deletar(scanner);
+                        break;
+                    case 8:
+                        pacienteDAO.deletar(scanner);
+                        break;
+                    case 9:
                         continuar = false;
                         break;
                     default:
