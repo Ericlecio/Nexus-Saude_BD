@@ -5,7 +5,7 @@ import java.util.List;
 
 public class AvaliacaoDAO {
     public AvaliacaoDAO(EntityManager em) {
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public void salvar(Avaliacao avaliacao) {

@@ -38,6 +38,7 @@ public class MedicoDAO {
 			especialidade.setNome(especialidadeNome);
 			em.persist(especialidade);
 		}
+		
 		Usuario usuario = new Usuario();
 		usuario.setNome(nome);
 		usuario.setEmail(email);

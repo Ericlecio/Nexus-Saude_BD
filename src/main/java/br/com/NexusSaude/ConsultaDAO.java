@@ -15,7 +15,6 @@ public class ConsultaDAO {
     public void agendarConsulta(Scanner scanner, MedicoDAO medicoDAO, PacienteDAO pacienteDAO) {
         System.out.println("\n### AGENDAR CONSULTA ###");
 
-        // Listar e selecionar médico
         medicoDAO.listar();
         System.out.print("Digite o ID do médico: ");
         long medicoId = scanner.nextLong();
@@ -26,7 +25,6 @@ public class ConsultaDAO {
             return;
         }
 
-        // Listar e selecionar paciente
         pacienteDAO.listar();
         System.out.print("Digite o ID do paciente: ");
         long pacienteId = scanner.nextLong();
@@ -37,7 +35,6 @@ public class ConsultaDAO {
             return;
         }
 
-        // Selecionar horário
         List<String> horariosDisponiveis = medico.getDiasAtendimento();
         if (horariosDisponiveis == null || horariosDisponiveis.isEmpty()) {
             System.out.println("O médico não possui horários disponíveis. Operação cancelada.");
@@ -60,7 +57,6 @@ public class ConsultaDAO {
         String horarioSelecionado = horariosDisponiveis.get(escolhaHorario - 1);
         LocalDateTime dataConsulta = parseHorario(horarioSelecionado);
 
-        // Criar consulta
         Consulta consulta = new Consulta();
         consulta.setMedico(medico);
         consulta.setPaciente(paciente);

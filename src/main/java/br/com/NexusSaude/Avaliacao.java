@@ -12,7 +12,7 @@ public class Avaliacao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.EAGER) // Carrega a consulta automaticamente
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "consulta_id", nullable = false)
     private Consulta consulta;
 

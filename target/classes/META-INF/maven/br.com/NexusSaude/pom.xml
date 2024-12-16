@@ -12,40 +12,40 @@
 	<url>http://maven.apache.org</url>
 
 	<properties>
-		<!-- Define o encoding do projeto -->
+		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<dependencies>
-		<!-- API Jakarta Persistence -->
+		
 		<dependency>
 			<groupId>jakarta.persistence</groupId>
 			<artifactId>jakarta.persistence-api</artifactId>
 			<version>3.1.0</version>
 		</dependency>
 
-		<!-- Hibernate ORM compatível com Jakarta -->
+		
 		<dependency>
 			<groupId>org.hibernate.orm</groupId>
 			<artifactId>hibernate-core</artifactId>
 			<version>6.2.10.Final</version>
 		</dependency>
 
-		<!-- Hibernate Validator (opcional, para validações) -->
+		
 		<dependency>
 			<groupId>org.hibernate.validator</groupId>
 			<artifactId>hibernate-validator</artifactId>
 			<version>8.0.0.Final</version>
 		</dependency>
 
-		<!-- API de Expressões EL para Hibernate Validator -->
+		
 		<dependency>
 			<groupId>org.glassfish</groupId>
 			<artifactId>jakarta.el</artifactId>
 			<version>4.0.2</version>
 		</dependency>
 
-		<!-- Banco de Dados H2 -->
+		
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
@@ -71,14 +71,14 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Hibernate Core -->
+		
 		<dependency>
 			<groupId>org.hibernate.orm</groupId>
 			<artifactId>hibernate-core</artifactId>
 			<version>6.2.10.Final</version>
 		</dependency>
 
-		<!-- Driver JDBC (exemplo com H2 para banco em memória) -->
+		
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
